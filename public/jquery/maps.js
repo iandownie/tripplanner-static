@@ -1,12 +1,36 @@
 var map_global = null;
-var markers = {};
+var hotels_markers = {}, rests_markers = {}, things_markers = {};
 
       function drawLocation (map, location, opts, name) {
         console.log(name);
           if (typeof opts !== 'object') opts = {};
           opts.position = new google.maps.LatLng(location[0], location[1]);
           opts.map = map;
-          markers[name] = new google.maps.Marker(opts);
+          hotels_markers[name] = new google.maps.Marker(opts);
+        }
+
+        function initializeHotels (location, name) {
+         opts = {
+              icon: '/images/lodging_0star.png'
+            };
+          opts.position = new google.maps.LatLng(location[0], location[1]);
+          hotels_markers[name] = new google.maps.Marker(opts);
+        }
+
+        function initializeRests (location, name) {
+          opts = {
+              icon: '/images/restaurant.png'
+            };
+          opts.position = new google.maps.LatLng(location[0], location[1]);
+          rests_markers[name] = new google.maps.Marker(opts);
+        }
+
+        function initializeThings (location, name) {
+          opts = {
+              icon: '/images/star-3.png'
+            };
+          opts.position = new google.maps.LatLng(location[0], location[1]);
+          things_markers[name] = new google.maps.Marker(opts);
         }
 
       function initialize_gmaps() {
@@ -24,6 +48,23 @@ var markers = {};
         // initialize a new Google Map with the options
         map_global = new google.maps.Map(map_canvas_obj, mapOptions);
 
+        all_hotels.forEach( function (hotel) {
+          hotel.place.forEach( function( element ) {
+            initializeHotels(element.location, hotel.name);
+          } );
+        });
+
+        all_restaurants.forEach( function (rest) {
+          rest.place.forEach( function( element ) {
+            initializeRests(element.location, rest.name);
+          } );
+        });
+
+        all_things_to_do.forEach( function (th) {
+          th.place.forEach( function( element ) {
+            initializeThings(element.location, th.name);
+          } );
+        });
         // var hotelLocation = [40.705137, -74.007624];
         // var restaurantLocations = [
         //   [40.705137, -74.013940],
