@@ -50,7 +50,7 @@ app.use(function(err, req, res, next) {
 });
 
 // server initialization
-var port = 1337;
+var port = 3000;
 app.listen(port, function () {
   console.log('The server is ALIVE! And listening to port', port);
 });

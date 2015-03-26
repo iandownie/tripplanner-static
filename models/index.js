@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/tripplanner');
+mongoose.connect('mongodb://localhost/planner');
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 
 var placeSchema = new mongoose.Schema({
@@ -33,6 +33,6 @@ var restaurantSchema = new mongoose.Schema({
 module.exports = {
   Place:      mongoose.model('Place', placeSchema),
   Hotel:      mongoose.model('Hotel', hotelSchema),
-  ThingToDo:  mongoose.model('ThingToDo', thingToDoSchema),
+  ThingToDo:  mongoose.model('Thing', thingToDoSchema),
   Restaurant: mongoose.model('Restaurant', restaurantSchema)
 };
