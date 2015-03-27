@@ -9,12 +9,39 @@ all.forEach(function(el){
 	})
 });
 
+function changeBounds(dayN) {
+
+	var activebounds = new google.maps.LatLngBounds();
+	var count = 0;
+
+	for(var i=0; i<all_hotels.length; i++) {
+		if (all_hotels[i].days.indexOf(dayN) >= 0) {
+			activebounds.extend(hotels_markers[all_hotels[i].name].position); count++;	
+			}
+		}
+	for(var i=0; i<all_restaurants.length; i++) {
+		if (all_restaurants[i].days.indexOf(dayN) >= 0) {
+			activebounds.extend(rests_markers[all_restaurants[i].name].position); count++;
+		}
+	}
+	for(var i=0; i<all_things_to_do.length; i++) {
+		if (all_things_to_do[i].days.indexOf(dayN) >= 0) {
+			activebounds.extend(things_markers[all_things_to_do[i].name].position); count++;
+		}
+	}	
+
+	if (count>0) map_global.fitBounds(activebounds);
+	else map_global.fitBounds(bounds);
+}
+
 function setActive (array, name){
 	var day = $('#day-title').children()[0].innerText.substr(4);
 	for (var i = 0; i < array.length; i++) {
 		if (array[i].name === name) array[i].days.push(day);
 	};
 	refreshMap();
+	var day = $('#day-title').children()[0].innerText.substr(4);
+	changeBounds(day);
 }
 	// Refresh button:
 
@@ -60,8 +87,7 @@ $(document).ready(function() {
 		$('#hotel-iten').append('<div class=\"itinerary-item\" ><span class=\"title\">' + $hotelname + '</span><button class=\"btn btn-xs btn-danger remove btn-circle\">x</button></div>');
 		
 		setActive(all_hotels, $hotelname );
-		
-		
+	
 	})
 
 	// Restaurant Operations
@@ -79,7 +105,7 @@ $(document).ready(function() {
 	 		$restaurantname + '</span><button class=\"btn btn-xs btn-danger remove btn-circle\">x</button></div>');
 		
 		setActive(all_restaurants, $restaurantname );
-		
+
 		}//IF
 		});
 
@@ -138,8 +164,7 @@ $(document).ready(function() {
 			var dayN=$(this).text();
 			$('#day-title').children('span').text("Day "+dayN)
 			$('.list-group').children().remove();
-			
-					
+
 			for(var i=0; i<all_hotels.length; i++) {
 				if (all_hotels[i].days.indexOf(dayN) >= 0) {
 					$('#hotel-iten').append('<div class=\"itinerary-item\" ><span class=\"title\">' 
@@ -149,6 +174,7 @@ $(document).ready(function() {
 
 			for(var i=0; i<all_restaurants.length; i++) {
 				if (all_restaurants[i].days.indexOf(dayN) >= 0) {
+					
 					$('#restaurant-iten').append('<div class=\"itinerary-item\" ><span class=\"title\">' 
 						+ all_restaurants[i].name + '</span><button class=\"btn btn-xs btn-danger remove btn-circle\">x</button></div>');
 				}
@@ -156,16 +182,17 @@ $(document).ready(function() {
 
 			for(var i=0; i<all_things_to_do.length; i++) {
 				if (all_things_to_do[i].days.indexOf(dayN) >= 0) {
+					
 					$('#things-iten').append('<div class=\"itinerary-item\" ><span class=\"title\">' 
 						+ all_things_to_do[i].name + '</span><button class=\"btn btn-xs btn-danger remove btn-circle\">x</button></div>');
 				}
 			}
 
 			refreshMap();// for review later
+			changeBounds(dayN);
+			
 		}
 
-
-		da
 	// 		$('.list-group').children('span').forEach(function(el){
 
 	// 			for(var j = 0; j<el.length; j++) {

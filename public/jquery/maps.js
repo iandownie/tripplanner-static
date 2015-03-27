@@ -1,4 +1,4 @@
-var map_global = null;
+var map_global = null, bounds = null;
 
 
       function drawLocation (map, location, opts, name) {
@@ -15,11 +15,7 @@ var map_global = null;
             };
           opts.position = new google.maps.LatLng(location[0], location[1]);
           var marker = new google.maps.Marker(opts);
-          
-          var bounds = new google.maps.LatLngBounds();
           bounds.extend(marker.position);
-          map_global.fitBounds(bounds);
-
           hotels_markers[name] = marker;
 
         }
@@ -29,7 +25,9 @@ var map_global = null;
               icon: '/images/restaurant.png'
             };
           opts.position = new google.maps.LatLng(location[0], location[1]);
-          rests_markers[name] = new google.maps.Marker(opts);
+          var marker = new google.maps.Marker(opts);
+          bounds.extend(marker.position);
+          rests_markers[name] = marker;
         }
 
         function initializeThings (location, name) {
@@ -37,7 +35,9 @@ var map_global = null;
               icon: '/images/star-3.png'
             };
           opts.position = new google.maps.LatLng(location[0], location[1]);
-          things_markers[name] = new google.maps.Marker(opts);
+          var marker = new google.maps.Marker(opts);
+          bounds.extend(marker.position);
+          things_markers[name] = marker;
         }
 
       function initialize_gmaps() {
@@ -46,7 +46,7 @@ var map_global = null;
         // set the map options hash
         var mapOptions = {
           center: myLatlng,
-          zoom: 13,
+          zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           styles: styleArr
         };
@@ -54,7 +54,9 @@ var map_global = null;
         var map_canvas_obj = document.getElementById("map-canvas");
         // initialize a new Google Map with the options
         map_global = new google.maps.Map(map_canvas_obj, mapOptions);
-
+        
+        bounds = new google.maps.LatLngBounds();
+        
         all_hotels.forEach( function (hotel) {
           hotel.place.forEach( function( element ) {
             initializeHotels(element.location, hotel.name);
@@ -72,6 +74,9 @@ var map_global = null;
             initializeThings(element.location, th.name);
           } );
         });
+
+        map_global.fitBounds(bounds);
+
         // var hotelLocation = [40.705137, -74.007624];
         // var restaurantLocations = [
         //   [40.705137, -74.013940],
