@@ -1,5 +1,5 @@
 var map_global = null;
-var hotels_markers = {}, rests_markers = {}, things_markers = {};
+
 
       function drawLocation (map, location, opts, name) {
         console.log(name);
@@ -14,7 +14,14 @@ var hotels_markers = {}, rests_markers = {}, things_markers = {};
               icon: '/images/lodging_0star.png'
             };
           opts.position = new google.maps.LatLng(location[0], location[1]);
-          hotels_markers[name] = new google.maps.Marker(opts);
+          var marker = new google.maps.Marker(opts);
+          
+          var bounds = new google.maps.LatLngBounds();
+          bounds.extend(marker.position);
+          map_global.fitBounds(bounds);
+
+          hotels_markers[name] = marker;
+
         }
 
         function initializeRests (location, name) {
