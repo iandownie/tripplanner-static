@@ -94,7 +94,8 @@ h3 {
   padding: 5px 5px;
   background: transparent;
   border-color: #a8c9dd;
-  color: #a8c9dd; }
+  color: #a8c9dd;
+  margin-right: 5px; }
   .day-btn:hover {
     border-color: #fff;
     color: #fff; }

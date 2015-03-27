@@ -151,18 +151,16 @@ $(document).ready(function() {
 	// 	});
 
 	// switching days
-	$('.day-buttons').on('click','.day-btn', function(){
-		if($(this).text()==='+'){
-			var n=$(this).siblings().length+1;
-			$(this).before('<button class=\"btn btn-circle day-btn\">'+n+'</button>');
-		}
-		else{
 
-			$(this).addClass("current-day");
-			$(this).siblings().removeClass("current-day");
+var changeDay=function(here){
+	console.log(here)
+			here.addClass("current-day");
+			here.siblings().removeClass("current-day");
 
-			var dayN=$(this).text();
+			var dayN=here.text();
+			
 			$('#day-title').children('span').text("Day "+dayN)
+			
 			$('.list-group').children().remove();
 
 			for(var i=0; i<all_hotels.length; i++) {
@@ -190,27 +188,44 @@ $(document).ready(function() {
 
 			refreshMap();// for review later
 			changeBounds(dayN);
-			
+}
+	$('.day-buttons').on('click','.day-btn', function(){
+		if($(this).text()==='+'){
+			var n=$(this).siblings().length+1;
+			$(this).before('<button class=\"btn btn-circle day-btn\">'+n+'</button>');
+		}
+		else{
+			changeDay($(this));
 		}
 
-	// 		$('.list-group').children('span').forEach(function(el){
-
-	// 			for(var j = 0; j<el.length; j++) {
-	// 				console.log(el[j].innerText);
-	// 			}
-	// 			// for(var i=0; i<actives.length; i++){
-	// 			// 	if($(this).text()  ===actives[i]){
-	// 			// 		$(this).show()
-	// 			// 	}
-	// 			// }
-	// 		})
-	// 	}
-	// });
-
-
-	// $('#option-hotel').siblings('button').on('click', function() {
-	// 	console.log(all_hotels);
-	// }
 });
+	$('#day-title').children('button').on('click' , function(){
+		var dayN2=$(this).siblings('span')[0].innerText.substr(4);
+		console.log("dayN2", dayN2)
+		all.forEach(function(el){
+			el.forEach(function(ement){
+				for(var i=0; i<ement.days.length; i++){
+					if (ement.days[i]=== dayN2){
+						ement.days.splice(i,1)
+					}else if(ement.days[i]>dayN2){
+						ement.days[i]--;
+						ement.days[i]=ement.days[i].toString();
+					}
+				}
+			})
+		})
+		$(this).siblings('span')[0].innerText='Days'+dayN2-1;
+		if ($('.current-day').prev().length>0){
+		changeDay($('.current-day').prev());
+		}else {changeDay($('.current-day'))}
+		if ($('.day-buttons').children().length>2){
+			$('.current-day').next().remove();
+			for(var j=0; j<$('.day-buttons').children().length-1;j++)
+			if($('.day-buttons').children()[j].innerText>dayN2){
+				$('.day-buttons').children()[j].innerText--;
+			}
+		}
+		
+	})
 });
 
